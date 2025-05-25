@@ -16,7 +16,7 @@ function UserProfilePage() {
   });
 
   useEffect(() => {
-    axiosInstance.get("/users/me")
+    axiosInstance.get("/users/profile")
       .then((res) => {
         setUser(res.data);
         setFormData({
