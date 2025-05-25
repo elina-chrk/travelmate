@@ -34,7 +34,7 @@ function RegisterPage() {
     }),
     onSubmit: async (values) => {
   try {
-    const response = await api.post('/Registration/registerWithToken', {
+    const response = await api.post('/Registration/register', {
   Email: values.email,
   Username: values.username,
   Password: values.password,
