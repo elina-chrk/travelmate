@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import api from "../api/axiosInstance"
 import { useState } from "react";
 
 function RegisterPage() {
@@ -34,13 +34,13 @@ function RegisterPage() {
     }),
     onSubmit: async (values) => {
   try {
-    const response = await axios.post('http://localhost:8080/api/Registration/register', {
-      Email: values.email,
-      Username: values.username,
-      Password: values.password,
-      FirstName: values.firstName,
-      LastName: values.lastName,
-    })
+    const response = await api.post('/Registration/registerWithToken', {
+  Email: values.email,
+  Username: values.username,
+  Password: values.password,
+  FirstName: values.firstName,
+  LastName: values.lastName
+})
 
     setSuccessMessage('Реєстрація успішна! Тепер увійдіть.')
     setErrorMessage('')

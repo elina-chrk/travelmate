@@ -13,7 +13,7 @@ function TripDetailsPage() {
   const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
-  axiosInstance.get(`/TravelGroups/${id}`)
+  axiosInstance.get(`/travel-groups/${id}`)
     .then((res) => {
       setTrip(res.data);
 
@@ -26,7 +26,7 @@ function TripDetailsPage() {
 
       setIsParticipant(!!participant && participant.status === 'Accepted')
       setIsPending(!!participant && participant.status === 'Pending')
-      setIsOwner(!!participant && participant.isAdmin === true) // 
+      setIsOwner(!!participant && participant.isAdmin === true) 
     })
     .catch((err) => {
       console.error("Помилка при завантаженні подорожі", err)
@@ -38,10 +38,10 @@ function TripDetailsPage() {
 
   const handleJoin = async () => {
   try {
-    await axiosInstance.post(`/Participation/${id}`);
+    await axiosInstance.post(`/participation/${id}`);
     alert("Заявку подано!");
     // Повторно завантажити деталі подорожі, щоб оновити статус
-    const res = await axiosInstance.get(`/TravelGroups/${id}`);
+    const res = await axiosInstance.get(`/travel-groups/${id}`);
     setTrip(res.data);
 
     const participant = res.data.userTravelGroups?.find(u => u.userId === userId);

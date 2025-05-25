@@ -37,7 +37,7 @@ function CreateTripPage() {
   ],
 };
 
-    await axiosInstance.post('/TravelGroups', payload);
+    await axiosInstance.post('/travel-groups', payload);
     alert('Подорож створено!');
     navigate('/');
   } catch (error) {

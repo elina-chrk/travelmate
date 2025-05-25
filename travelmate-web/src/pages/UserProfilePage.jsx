@@ -16,7 +16,7 @@ function UserProfilePage() {
   });
 
   useEffect(() => {
-    axiosInstance.get("/Users/me")
+    axiosInstance.get("/users/me")
       .then((res) => {
         setUser(res.data);
         setFormData({
@@ -41,7 +41,7 @@ function UserProfilePage() {
 
   const handleSave = async () => {
     try {
-      await axiosInstance.put(`/Users/${userId}`, formData);
+      await axiosInstance.put(`/users/${userId}`, formData);
       alert("Профіль оновлено!");
     } catch (err) {
       console.error("❌ Помилка збереження", err);

@@ -10,7 +10,7 @@ function HomePage() {
 
   useEffect(() => {
     axiosInstance
-      .get("/TravelGroups")
+      .get("/travel-groups")
       .then((response) => {
         setTrips(response.data || []);
       })

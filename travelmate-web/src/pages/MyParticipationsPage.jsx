@@ -7,7 +7,7 @@ function MyParticipationsPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosInstance.get("/Participation/me")
+    axiosInstance.get("/participation/me")
       .then((res) => setParticipations(res.data))
       .catch((err) => console.error("❌ Не вдалося завантажити участі", err));
   }, []);
