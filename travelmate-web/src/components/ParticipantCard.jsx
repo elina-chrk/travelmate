@@ -1,4 +1,5 @@
 import PurpleButton from './PurpleButton';
+import './ParticipantCard.css';
 
 function ParticipantCard({
   participant,
@@ -8,41 +9,25 @@ function ParticipantCard({
   onRemove,
 }) {
   return (
-    <li className="border rounded-xl p-4 bg-gray-50 flex justify-between items-center shadow-sm">
-      <div>
-        <p className="font-semibold text-purple-800">{participant.email || participant.userId}</p>
-        <span className="text-sm text-gray-500">
+    <li className="participant-card">
+      <div className="participant-info">
+        <p className="participant-email">
+          {participant.email || participant.userId}
+        </p>
+        <span className="participant-status">
           {participant.status} {participant.isAdmin && "(Організатор)"}
         </span>
       </div>
 
       {isOwner && !participant.isAdmin && (
-        <div className="flex gap-2">
+        <div className="participant-actions">
           {participant.status === "Pending" && (
             <>
-              <PurpleButton
-                size="sm"
-                color="primary"
-                onClick={() => onApprove(participant.id)}
-              >
-                ✅
-              </PurpleButton>
-              <PurpleButton
-                size="sm"
-                color="secondary"
-                onClick={() => onReject(participant.id)}
-              >
-                ❌
-              </PurpleButton>
+              <PurpleButton onClick={() => onApprove(participant.id)}>✅</PurpleButton>
+              <PurpleButton onClick={() => onReject(participant.id)}>❌</PurpleButton>
             </>
           )}
-          <PurpleButton
-            size="sm"
-            color="danger"
-            onClick={() => onRemove(participant.id)}
-          >
-            🗑
-          </PurpleButton>
+          <PurpleButton onClick={() => onRemove(participant.id)}>🗑</PurpleButton>
         </div>
       )}
     </li>

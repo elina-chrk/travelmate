@@ -1,0 +1,85 @@
+.participations-wrapper {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 24px;
+}
+
+li {
+  list-style-type: none;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #7c3aed;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-button:hover {
+  color: #5b21b6;
+  text-decoration: underline;
+}
+
+.participations-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #6b21a8;
+  margin-bottom: 24px;
+}
+
+.no-participations {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.participation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.participation-card {
+  border: 1px solid #e9d5ff;
+  background-color: #fdfcff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.06);
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #7c3aed;
+  margin-bottom: 4px;
+}
+
+.card-dates {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.card-status {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: #4b5563;
+}
+
+.card-button {
+  background-color: #7c3aed;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.card-button:hover {
+  background-color: #6b21a8;
+}

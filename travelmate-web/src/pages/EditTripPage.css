@@ -1,0 +1,54 @@
+.edit-trip-wrapper {
+  max-width: 600px;
+  margin: 60px auto;
+  padding: 40px;
+  background-color: #f9f5ff;
+  border: 2px solid #e9d5ff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(122, 92, 200, 0.08);
+}
+
+.edit-trip-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #7c3aed;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #4b5563;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #c4b5fd;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.form-submit {
+  padding: 12px;
+  background-color: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.form-submit:hover {
+  background-color: #6b21a8;
+}

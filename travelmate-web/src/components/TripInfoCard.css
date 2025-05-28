@@ -1,0 +1,56 @@
+.trip-info-card {
+  background-color: #ffffff;
+  border: 1px solid #e9d5ff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(140, 87, 211, 0.08);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.trip-info-card:hover {
+  box-shadow: 0 10px 30px rgba(140, 87, 211, 0.15);
+}
+
+.trip-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.trip-icon {
+  width: 24px;
+  height: 24px;
+  color: #a78bfa;
+}
+
+.info-icon {
+  width: 20px;
+  height: 20px;
+  color: #c084fc;
+  margin-top: 2px;
+}
+
+.trip-description {
+  color: #4b5563;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.calendar-icon {
+  width: 20px;
+  height: 20px;
+  color: #a855f7;
+}
+
+.trip-dates {
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

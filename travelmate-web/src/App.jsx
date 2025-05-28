@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import './App.css'; 
+import "./App.css";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -9,6 +9,7 @@ import CreateTripPage from "./pages/CreateTripPage";
 import TripDetailsPage from "./pages/TripDetailsPage";
 import MyParticipationsPage from "./pages/MyParticipationsPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import EditTripPage from "./pages/EditTripPage.jsx";
 
 function App() {
   return (
@@ -50,14 +51,21 @@ function App() {
             }
           />
           <Route
-  path="/profile"
-  element={
-    <PrivateRoute>
-      <UserProfilePage />
-    </PrivateRoute>
-  }
-/>
-
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <UserProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/trips/:id/edit"
+            element={
+              <PrivateRoute>
+                <EditTripPage />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </div>
     </AuthProvider>

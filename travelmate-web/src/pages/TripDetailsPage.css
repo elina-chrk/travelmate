@@ -1,0 +1,63 @@
+.trip-details-wrapper {
+  max-width: 720px;
+  margin: 60px auto;
+  padding: 40px;
+  background-color: #fdfcff;
+  border: 2px solid #e5d6ff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(122, 92, 200, 0.08);
+}
+
+.participants-section {
+  margin-top: 40px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #6b21a8;
+  margin-bottom: 16px;
+}
+
+.participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actions-section {
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pending-text {
+  color: #d97706;
+  font-weight: 500;
+  text-align: center;
+}
+
+.owner-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+.btn-leave {
+  width: 100%;
+  background-color: #d8b4fe !important;
+  color: #4c1d95;
+}
+
+.btn-edit {
+  background-color: #fbbf24 !important;
+}
+
+.btn-delete {
+  background-color: #ef4444 !important;
+}

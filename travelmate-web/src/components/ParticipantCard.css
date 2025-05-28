@@ -1,0 +1,36 @@
+.participant-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f5ff;
+  border: 1px solid #e9d5ff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 3px 8px rgba(124, 58, 237, 0.05);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.participant-card:hover {
+  box-shadow: 0 6px 14px rgba(124, 58, 237, 0.1);
+}
+
+.participant-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.participant-email {
+  font-weight: 600;
+  color: #6b21a8;
+  margin-bottom: 4px;
+}
+
+.participant-status {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.participant-actions {
+  display: flex;
+  gap: 10px;
+}
