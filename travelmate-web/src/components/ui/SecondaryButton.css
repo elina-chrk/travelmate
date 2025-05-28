@@ -1,0 +1,13 @@
+.secondary-button {
+  background-color: #f3f4f6; /* gray-100 */
+  color: #7c3aed; /* purple-600 */
+  border: 1px solid #d8b4fe; /* purple-300 */
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.secondary-button:hover {
+  background-color: #e5e7eb; /* gray-200 */
+}

@@ -1,0 +1,10 @@
+.empty-state {
+  text-align: center;
+  color: #6b7280; /* text-gray-500 */
+  margin-top: 2.5rem;
+}
+
+.empty-state-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
