@@ -11,6 +11,10 @@ function EditTripPage() {
     description: "",
     startTime: "",
     endTime: "",
+    maxParticipants: 100,
+    status: 0,
+    difficulty: 0,
+    routePoints: [], // додаємо сюди
   });
 
   useEffect(() => {
@@ -24,6 +28,9 @@ function EditTripPage() {
           maxParticipants: trip.maxParticipants || 100,
           startTime: trip.startTime?.slice(0, 16),
           endTime: trip.endTime?.slice(0, 16),
+          status: trip.status ?? 0,
+          difficulty: trip.difficulty ?? 0,
+          routePoints: trip.routePoints || [], // теж отримуємо
         });
       })
       .catch((err) => {
@@ -33,23 +40,39 @@ function EditTripPage() {
   }, [id]);
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]:
+        name === "status" || name === "difficulty" || name === "maxParticipants"
+          ? parseInt(value, 10) || 0
+          : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // PATCH для статусу
+      await axiosInstance.patch(`/travel-groups/${id}/status`, {
+        travelGroupId: id,
+        status: formData.status,
+      });
+
+      // PUT з усіма полями, включаючи routePoints
       const payload = {
         id,
-        ...formData,
+        title: formData.title,
+        description: formData.description,
+        maxParticipants: Number(formData.maxParticipants) || 100,
         startTime: new Date(formData.startTime).toISOString(),
-        maxParticipants: formData.maxParticipants || 100,
         endTime: new Date(formData.endTime).toISOString(),
+        difficulty: formData.difficulty,
+        routePoints: formData.routePoints,
       };
+
       await axiosInstance.put(`/travel-groups/${id}`, payload);
+
       alert("Подорож оновлено!");
       navigate(`/trips/${id}`);
     } catch (err) {
@@ -57,7 +80,7 @@ function EditTripPage() {
       alert("Не вдалося оновити подорож.");
     }
   };
-
+  
   return (
     <div className="edit-trip-wrapper">
       <form onSubmit={handleSubmit} className="edit-trip-form">
@@ -107,6 +130,26 @@ function EditTripPage() {
             value={formData.endTime}
             onChange={handleChange}
           />
+        </div>
+
+        <div className="form-group">
+          <label>Екстремальність</label>
+          <select name="difficulty" value={formData.difficulty} onChange={handleChange}>
+            <option value={0}>Легка</option>
+            <option value={1}>Середня</option>
+            <option value={2}>Важка</option>
+            <option value={3}>Екстремальна</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Статус</label>
+          <select name="status" value={formData.status} onChange={handleChange}>
+            <option value={0}>Запланована</option>
+            <option value={1}>Активна</option>
+            <option value={2}>Завершена</option>
+            <option value={3}>Скасована</option>
+          </select>
         </div>
 
         <button type="submit" className="form-submit">

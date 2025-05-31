@@ -10,6 +10,7 @@ import TripDetailsPage from "./pages/TripDetailsPage";
 import MyParticipationsPage from "./pages/MyParticipationsPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import EditTripPage from "./pages/EditTripPage.jsx";
+import TravelEmergencyPage from "./pages/TravelEmergencyPage.jsx";
 
 function App() {
   return (
@@ -65,6 +66,10 @@ function App() {
                 <EditTripPage />
               </PrivateRoute>
             }
+          />
+          <Route
+            path="/travel/:id/emergency"
+            element={<TravelEmergencyPage />}
           />
         </Routes>
       </div>

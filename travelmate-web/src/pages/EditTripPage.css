@@ -52,3 +52,15 @@
 .form-submit:hover {
   background-color: #6b21a8;
 }
+
+select {
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #e6d7ff;
+}
+
+select:hover {
+    background-color: #d5bbff;
+}

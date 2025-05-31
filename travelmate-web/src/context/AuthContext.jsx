@@ -6,6 +6,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [userId, setUserId] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [username, setUsername] = useState("");
   
 
   useEffect(() => {
@@ -15,6 +16,7 @@ export const AuthProvider = ({ children }) => {
         const payload = JSON.parse(atob(token.split('.')[1]))
         console.log("✅ JWT payload on load:", payload); 
         setUserId(payload.sub)
+        setUsername(payload.username);
         setIsAuthenticated(true)
       } catch (error) {
         console.error('Невірний токен:', error)
@@ -29,6 +31,7 @@ export const AuthProvider = ({ children }) => {
     const payload = JSON.parse(atob(token.split('.')[1]))
     console.log("✅ JWT payload on login:", payload); 
     setUserId(payload.sub)
+    setUsername(payload.username);
     setIsAuthenticated(true)
   }
 
@@ -39,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userId, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, userId, username, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   )
