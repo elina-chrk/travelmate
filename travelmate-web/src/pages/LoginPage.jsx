@@ -8,6 +8,7 @@ import './LoginPage.css';
 
 function LoginPage() {
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -38,6 +39,10 @@ function LoginPage() {
     },
   });
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <div className="login-wrapper">
       <form onSubmit={formik.handleSubmit} className="login-form">
@@ -60,20 +65,25 @@ function LoginPage() {
         <div className="form-group">
           <label>Пароль</label>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             name="password"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             value={formik.values.password}
           />
+          <button
+            type="button"
+            className="toggle-password-text"
+            onClick={togglePasswordVisibility}
+          >
+            {showPassword ? 'Сховати пароль' : 'Показати пароль'}
+          </button>
           {formik.touched.password && formik.errors.password && (
             <div className="form-error">{formik.errors.password}</div>
           )}
         </div>
 
-        {errorMessage && (
-          <div className="form-error">{errorMessage}</div>
-        )}
+        {errorMessage && <div className="form-error">{errorMessage}</div>}
 
         <button type="submit" className="login-button">
           Увійти

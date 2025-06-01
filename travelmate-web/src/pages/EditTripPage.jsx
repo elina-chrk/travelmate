@@ -14,7 +14,7 @@ function EditTripPage() {
     maxParticipants: 100,
     status: 0,
     difficulty: 0,
-    routePoints: [], // додаємо сюди
+    routePoints: [], 
   });
 
   useEffect(() => {
@@ -161,3 +161,4 @@ function EditTripPage() {
 }
 
 export default EditTripPage;
+ 

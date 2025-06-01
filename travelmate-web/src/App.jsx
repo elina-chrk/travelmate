@@ -11,6 +11,7 @@ import MyParticipationsPage from "./pages/MyParticipationsPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import EditTripPage from "./pages/EditTripPage.jsx";
 import TravelEmergencyPage from "./pages/TravelEmergencyPage.jsx";
+import AdminPage from "./components/admin/AdminPage.jsx";
 
 function App() {
   return (
@@ -70,6 +71,14 @@ function App() {
           <Route
             path="/travel/:id/emergency"
             element={<TravelEmergencyPage />}
+          />
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute adminOnly={true}>
+                <AdminPage />
+              </PrivateRoute>
+            }
           />
         </Routes>
       </div>

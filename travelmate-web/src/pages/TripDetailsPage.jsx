@@ -6,6 +6,7 @@ import PurpleButton from "../components/PurpleButton";
 import ParticipantCard from "../components/ParticipantCard";
 import TripInfoCard from "../components/TripInfoCard";
 import "./TripDetailsPage.css";
+import ChatBox from "../components/ChatBox";
 
 const STATUS_OPTIONS = [
   { label: "Запланована", value: 0 },
@@ -148,6 +149,8 @@ function TripDetailsPage() {
         status={trip.status}
         difficulty={trip.difficulty}
         maxParticipants={trip.maxParticipants}
+        startPoint={trip.startPoint} // або trip.startLocation
+        endPoint={trip.endPoint}
       />
 
       {/* Учасники */}
@@ -199,6 +202,8 @@ function TripDetailsPage() {
             </PurpleButton>
           </div>
         )}
+
+        <ChatBox tripId={trip.id} userId={userId} />
       </div>
     </div>
   );

@@ -79,3 +79,26 @@
   color: #5b21b6;
   border-color: #a78bfa;
 }
+
+.password-input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.password-input-wrapper input {
+  margin-bottom: 4px;
+}
+
+.toggle-password-text {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+  padding: 0;
+}
+
+.toggle-password-text:hover {
+  text-decoration: underline;
+}

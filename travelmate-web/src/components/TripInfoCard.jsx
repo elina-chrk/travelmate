@@ -1,7 +1,23 @@
 import { CalendarDays, MapPin, Info, Users, Mountain } from "lucide-react";
+import MapComponent from "../pages/MapComponent";
 import "./TripInfoCard.css";
 
-function TripInfoCard({ title, description, startTime, endTime, status, difficulty, maxParticipants }) {
+function TripInfoCard({
+  title,
+  description,
+  startTime,
+  endTime,
+  status,
+  difficulty,
+  maxParticipants,
+  startPoint: propStartPoint,
+  endPoint: propEndPoint,
+}) {
+
+  // Якщо пропси startPoint/endPoint не передані, використовуємо жорстко прописані координати для тесту
+  const startPoint = propStartPoint || { lat: 50.4501, lng: 30.5234 }; // Київ
+  const endPoint = propEndPoint || { lat: 49.8397, lng: 24.0297 };     // Львів
+
   const getStatusClass = (status) => {
     switch (status) {
       case 0: return "trip-status-badge status-planned";
@@ -62,6 +78,13 @@ function TripInfoCard({ title, description, startTime, endTime, status, difficul
       <span className={getStatusClass(status)}>
         Статус: {getStatusLabel(status)}
       </span>
+
+      {/* Карта маршруту */}
+      {startPoint && endPoint && (
+        <div className="map-container" style={{ marginTop: "20px", height: "300px" }}>
+          <MapComponent start={startPoint} end={endPoint} />
+        </div>
+      )}
     </div>
   );
 }

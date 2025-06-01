@@ -44,11 +44,6 @@ function HomePage() {
         <PageHeader
           title="Подорожі"
           subtitle="Ознайомся з доступними подорожами або створи власну"
-          /* action={
-            <PrimaryButton onClick={() => navigate("/create-trip")}>
-              ➕ Створити подорож
-            </PrimaryButton>
-          }*/
         />
         {trips.length === 0 ? (
           <EmptyState
