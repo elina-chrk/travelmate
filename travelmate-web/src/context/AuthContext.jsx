@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
         setUserId(payload.sub);
         setUsername(payload.username);
 
-        setIsAdmin(payload.IsSystemAdmin === "True");
+        setIsAdmin(String(payload.IsSystemAdmin).toLowerCase() === "true");
 
         setIsAuthenticated(true);
       } catch (error) {
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     setUserId(payload.sub);
     setUsername(payload.username);
-    setIsAdmin(payload.IsSystemAdmin === "True");
+    setIsAdmin(String(payload.IsSystemAdmin).toLowerCase() === "true");
     setIsAuthenticated(true);
   };
 

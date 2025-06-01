@@ -10,14 +10,8 @@ function TripInfoCard({
   status,
   difficulty,
   maxParticipants,
-  startPoint: propStartPoint,
-  endPoint: propEndPoint,
+  routePoints = [],
 }) {
-
-  // Якщо пропси startPoint/endPoint не передані, використовуємо жорстко прописані координати для тесту
-  const startPoint = propStartPoint || { lat: 50.4501, lng: 30.5234 }; // Київ
-  const endPoint = propEndPoint || { lat: 49.8397, lng: 24.0297 };     // Львів
-
   const getStatusClass = (status) => {
     switch (status) {
       case 0: return "trip-status-badge status-planned";
@@ -47,6 +41,13 @@ function TripInfoCard({
       default: return "Невідомо";
     }
   };
+
+  const sortedPoints = Array.isArray(routePoints)
+    ? [...routePoints].sort((a, b) => a.order - b.order)
+    : [];
+
+  const startPoint = sortedPoints.length > 0 ? sortedPoints[0] : null;
+  const endPoint = sortedPoints.length > 0 ? sortedPoints[sortedPoints.length - 1] : null;
 
   return (
     <div className="trip-info-card">
@@ -82,7 +83,7 @@ function TripInfoCard({
       {/* Карта маршруту */}
       {startPoint && endPoint && (
         <div className="map-container" style={{ marginTop: "20px", height: "300px" }}>
-          <MapComponent start={startPoint} end={endPoint} />
+          <MapComponent routePoints={sortedPoints} start={startPoint} end={endPoint} />
         </div>
       )}
     </div>

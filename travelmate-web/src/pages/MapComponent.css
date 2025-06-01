@@ -1,16 +1,15 @@
+/*
 .map-container {
-  width: 100%;             /* карта на всю ширину батьківського контейнера */
-  max-width: 600px;        /* максимальна ширина карти */
-  height: 300px;           /* фіксована висота */
-  margin: 20px auto 0;     /* відступ зверху, центр по горизонталі */
-  border-radius: 10px;     /* заокруглення кутів */
-  overflow: hidden;        /* обрізання вмісту, щоб карта не виходила за межі */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  /* легка тінь для кращого вигляду */
-  position: relative;      /* відносне позиціювання */
-  z-index: 1;              /* стандартний рівень, щоб не перекривати інші елементи */
+  width: 100%;             
+  max-width: 600px;        
+  height: 300px;          
+  margin: 20px auto 0;    
+  border-radius: 10px;    
+  overflow: hidden;       
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  
+  position: relative;     
 }
 
-/* Важливо: щоб карта зайняла весь контейнер, дивись стилі для внутрішнього div карти */
 
 .map {
   width: 100%;
@@ -18,4 +17,15 @@
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+}*/
+
+.map-container {
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
 }

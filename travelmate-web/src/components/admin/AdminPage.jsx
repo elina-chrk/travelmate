@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axiosInstance from "../../api/axiosInstance";
 import "./AdminPage.css";
 
 const AdminPage = () => {
@@ -20,23 +21,29 @@ const AdminPage = () => {
     try {
       const [bannedUsersRes, activeUsersRes, bannedGroupsRes, activeGroupsRes] =
         await Promise.all([
-          fetch("/api/admin/users/banned"),
-          fetch("/api/admin/users/active"),
-          fetch("/api/admin/groups/banned"),
-          fetch("/api/admin/groups/active"),
+          axiosInstance.get("/admin/users/banned"),
+          axiosInstance.get("/admin/users/active"),
+          axiosInstance.get("/admin/groups/banned"),
+          axiosInstance.get("/admin/groups/active"),
         ]);
-      const bannedUsersData = await bannedUsersRes.json();
-      const activeUsersData = await activeUsersRes.json();
-      const bannedGroupsData = await bannedGroupsRes.json();
-      const activeGroupsData = await activeGroupsRes.json();
 
-      setBannedUsers(bannedUsersData.data || []);
-      setActiveUsers(activeUsersData.data || []);
-      setBannedGroups(bannedGroupsData.data || []);
-      setActiveGroups(activeGroupsData.data || []);
+      setBannedUsers(bannedUsersRes.data.data || []);
+      setActiveUsers(activeUsersRes.data.data || []);
+      setBannedGroups(bannedGroupsRes.data.data || []);
+      setActiveGroups(activeGroupsRes.data.data || []);
     } catch (error) {
       console.error("Fetch error:", error);
     }
+  };
+
+  const fetchWithAuth = async (url, options = {}) => {
+    const token = localStorage.getItem("token");
+    const headers = {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    };
+    const res = await fetch(url, { ...options, headers });
+    return res;
   };
 
   useEffect(() => {
@@ -47,61 +54,43 @@ const AdminPage = () => {
   const banUser = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/admin/ban/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: banUserId, reason: banUserReason }),
+      await axiosInstance.post("/admin/ban/user", {
+        userId: banUserId,
+        reason: banUserReason,
       });
-      if (res.ok) {
-        alert("User banned successfully");
-        setBanUserId("");
-        setBanUserReason("");
-        fetchData();
-      } else {
-        alert("Failed to ban user");
-      }
+      alert("User banned successfully");
+      setBanUserId("");
+      setBanUserReason("");
+      fetchData();
     } catch (error) {
       alert("Error banning user");
     }
   };
 
-  // Бан групи
   const banGroup = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/admin/ban/group", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ groupId: banGroupId, reason: banGroupReason }),
+      await axiosInstance.post("/admin/ban/group", {
+        groupId: banGroupId,
+        reason: banGroupReason,
       });
-      if (res.ok) {
-        alert("Group banned successfully");
-        setBanGroupId("");
-        setBanGroupReason("");
-        fetchData();
-      } else {
-        alert("Failed to ban group");
-      }
+      alert("Group banned successfully");
+      setBanGroupId("");
+      setBanGroupReason("");
+      fetchData();
     } catch (error) {
       alert("Error banning group");
     }
   };
 
-  // Розбан користувача або групи по banRecordId
   const unban = async (e) => {
     e.preventDefault();
     if (!unbanRecordId) return alert("Please enter banRecordId");
     try {
-      const res = await fetch(`/api/admin/unban/${unbanRecordId}`, {
-        method: "POST",
-      });
-      if (res.ok) {
-        alert("Unbanned successfully");
-        setUnbanRecordId("");
-        fetchData();
-      } else {
-        alert("Failed to unban");
-      }
+      await axiosInstance.post(`/admin/unban/${unbanRecordId}`);
+      alert("Unbanned successfully");
+      setUnbanRecordId("");
+      fetchData();
     } catch (error) {
       alert("Error unbanning");
     }
@@ -148,9 +137,7 @@ const AdminPage = () => {
         <h2>Active Groups</h2>
         <ul>
           {activeGroups.map((g) => (
-            <li key={g.id}>
-              {g.title} - Active
-            </li>
+            <li key={g.id}>{g.title} - Active</li>
           ))}
         </ul>
       </section>
@@ -173,7 +160,9 @@ const AdminPage = () => {
           onChange={(e) => setBanUserReason(e.target.value)}
           required
         />
-        <button type="submit" className="ban">Ban User</button>
+        <button type="submit" className="ban">
+          Ban User
+        </button>
       </form>
 
       <form onSubmit={banGroup} style={{ marginBottom: "20px" }}>
@@ -192,7 +181,9 @@ const AdminPage = () => {
           onChange={(e) => setBanGroupReason(e.target.value)}
           required
         />
-        <button type="submit" className="ban">Ban Group</button>
+        <button type="submit" className="ban">
+          Ban Group
+        </button>
       </form>
 
       <form onSubmit={unban}>
@@ -204,7 +195,9 @@ const AdminPage = () => {
           onChange={(e) => setUnbanRecordId(e.target.value)}
           required
         />
-        <button type="submit" className="unban">Unban</button>
+        <button type="submit" className="unban">
+          Unban
+        </button>
       </form>
     </div>
   );

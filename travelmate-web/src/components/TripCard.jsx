@@ -3,6 +3,13 @@ import PurpleButton from "./PurpleButton";
 import './TripCard.css';
 import SecondaryButton from "./ui/SecondaryButton";
 
+const TRAVEL_STATUS_LABELS = {
+  0: "Запланована",
+  1: "Активна",
+  2: "Завершена",
+  3: "Скасована",
+};
+
 function TripCard({ trip }) {
   const navigate = useNavigate();
 
@@ -15,15 +22,17 @@ function TripCard({ trip }) {
         {new Date(trip.endTime).toLocaleDateString()}
       </p>
       <p className="trip-info">Максимум учасників: {trip.maxParticipants}</p>
-      <p className="trip-info">Статус: {trip.status || "невідомо"}</p>
+      <p className="trip-info">
+        Статус: {TRAVEL_STATUS_LABELS[trip.status] || "невідомо"}
+      </p>
 
       <div className="trip-actions">
         <SecondaryButton onClick={() => navigate(`/trips/${trip.id}`)}>
           Переглянути деталі
         </SecondaryButton>
-        <SecondaryButton onClick={() => navigate("/my-participations")} className="bg-purple-500 hover:bg-purple-600">
+       {/* <SecondaryButton onClick={() => navigate("/my-participations")} className="bg-purple-500 hover:bg-purple-600">
           Мої участі
-        </SecondaryButton>
+        </SecondaryButton>*/}
       </div>
     </div>
   );

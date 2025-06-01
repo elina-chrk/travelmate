@@ -3,19 +3,28 @@ import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "./MyParticipationsPage.css";
 
+const PARTICIPATION_STATUS_LABELS = {
+  0: "Очікує підтвердження",
+  1: "Прийнято",
+  2: "Відхилено",
+};
+
 function MyParticipationsPage() {
   const [participations, setParticipations] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosInstance.get("/participation/me")
+    axiosInstance
+      .get("/participation/me")
       .then(async (res) => {
         const participationsRaw = res.data;
 
         const enhanced = await Promise.all(
           participationsRaw.map(async (p) => {
             try {
-              const groupRes = await axiosInstance.get(`/travel-groups/${p.travelGroupId}`);
+              const groupRes = await axiosInstance.get(
+                `/travel-groups/${p.travelGroupId}`
+              );
               return { ...p, travelGroup: groupRes.data };
             } catch (err) {
               console.error("❌ Не вдалося завантажити подорож:", p.travelGroupId);
@@ -29,6 +38,8 @@ function MyParticipationsPage() {
       .catch((err) => console.error("❌ Не вдалося завантажити участі", err));
   }, []);
 
+  const filtered = participations.filter((p) => p.status !== 2); // без Rejected
+
   return (
     <div className="participations-wrapper">
       <button className="back-button" onClick={() => navigate("/")}>
@@ -37,18 +48,20 @@ function MyParticipationsPage() {
 
       <h1 className="participations-title">Мої участі в подорожах</h1>
 
-      {participations.length === 0 ? (
+      {filtered.length === 0 ? (
         <p className="no-participations">
           Ви ще не приєднувались до жодної подорожі.
         </p>
       ) : (
         <ul className="participation-list">
-          {participations.map((p) => {
+          {filtered.map((p) => {
             const group = p.travelGroup;
             const title = group?.title || "Подорож";
             const date =
               group?.startTime && group?.endTime
-                ? `${new Date(group.startTime).toLocaleDateString()} — ${new Date(group.endTime).toLocaleDateString()}`
+                ? `${new Date(group.startTime).toLocaleDateString()} — ${new Date(
+                    group.endTime
+                  ).toLocaleDateString()}`
                 : "Дата невідома";
 
             return (
@@ -56,7 +69,7 @@ function MyParticipationsPage() {
                 <h2 className="card-title">{title}</h2>
                 <p className="card-dates">{date}</p>
                 <p className="card-status">
-                  Статус: <strong>{p.status}</strong>
+                  Статус: <strong>{PARTICIPATION_STATUS_LABELS[p.status]}</strong>
                 </p>
                 <button
                   className="card-button"

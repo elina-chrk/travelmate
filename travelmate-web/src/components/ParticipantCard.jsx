@@ -3,6 +3,7 @@ import './ParticipantCard.css';
 
 function ParticipantCard({
   participant,
+  statusLabel, 
   isOwner,
   onApprove,
   onReject,
@@ -15,13 +16,13 @@ function ParticipantCard({
           {participant.email || participant.userId}
         </p>
         <span className="participant-status">
-          {participant.status} {participant.isAdmin && "(Організатор)"}
+          {statusLabel} {participant.isAdmin && "(Організатор)"}
         </span>
       </div>
 
       {isOwner && !participant.isAdmin && (
         <div className="participant-actions">
-          {participant.status === "Pending" && (
+          {participant.status === 0 && ( // Pending
             <>
               <PurpleButton onClick={() => onApprove(participant.id)}>✅</PurpleButton>
               <PurpleButton onClick={() => onReject(participant.id)}>❌</PurpleButton>

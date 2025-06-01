@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../api/axiosInstance";
+import MapEditor from "../components/MapEditor";
 import "./EditTripPage.css";
 
 function EditTripPage() {
@@ -14,7 +15,7 @@ function EditTripPage() {
     maxParticipants: 100,
     status: 0,
     difficulty: 0,
-    routePoints: [], 
+    routePoints: [],
   });
 
   useEffect(() => {
@@ -26,11 +27,11 @@ function EditTripPage() {
           title: trip.title || "",
           description: trip.description || "",
           maxParticipants: trip.maxParticipants || 100,
-          startTime: trip.startTime?.slice(0, 16),
-          endTime: trip.endTime?.slice(0, 16),
+          startTime: trip.startTime?.slice(0, 16) || "",
+          endTime: trip.endTime?.slice(0, 16) || "",
           status: trip.status ?? 0,
           difficulty: trip.difficulty ?? 0,
-          routePoints: trip.routePoints || [], // теж отримуємо
+          routePoints: trip.routePoints || [],
         });
       })
       .catch((err) => {
@@ -53,13 +54,11 @@ function EditTripPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // PATCH для статусу
       await axiosInstance.patch(`/travel-groups/${id}/status`, {
         travelGroupId: id,
         status: formData.status,
       });
 
-      // PUT з усіма полями, включаючи routePoints
       const payload = {
         id,
         title: formData.title,
@@ -80,7 +79,7 @@ function EditTripPage() {
       alert("Не вдалося оновити подорож.");
     }
   };
-  
+
   return (
     <div className="edit-trip-wrapper">
       <form onSubmit={handleSubmit} className="edit-trip-form">
@@ -134,7 +133,11 @@ function EditTripPage() {
 
         <div className="form-group">
           <label>Екстремальність</label>
-          <select name="difficulty" value={formData.difficulty} onChange={handleChange}>
+          <select
+            name="difficulty"
+            value={formData.difficulty}
+            onChange={handleChange}
+          >
             <option value={0}>Легка</option>
             <option value={1}>Середня</option>
             <option value={2}>Важка</option>
@@ -151,6 +154,16 @@ function EditTripPage() {
             <option value={3}>Скасована</option>
           </select>
         </div>
+      {  console.log(formData.routePoints)}
+        <h3 className="form-subtitle">
+          Маршрут (натисни на карту для додавання)
+        </h3>
+        <MapEditor
+          points={formData.routePoints}
+          setPoints={(newPoints) =>
+            setFormData((prev) => ({ ...prev, routePoints: newPoints }))
+          }
+        />
 
         <button type="submit" className="form-submit">
           💾 Зберегти зміни
@@ -161,4 +174,3 @@ function EditTripPage() {
 }
 
 export default EditTripPage;
- 

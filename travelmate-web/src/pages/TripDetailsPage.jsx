@@ -8,25 +8,17 @@ import TripInfoCard from "../components/TripInfoCard";
 import "./TripDetailsPage.css";
 import ChatBox from "../components/ChatBox";
 
-const STATUS_OPTIONS = [
-  { label: "Запланована", value: 0 },
-  { label: "Активна", value: 1 },
-  { label: "Завершена", value: 2 },
-  { label: "Скасована", value: 3 },
-];
-
-const STATUS_BADGES = {
-  0: "bg-yellow-100 text-yellow-800",
-  1: "bg-green-100 text-green-800",
-  2: "bg-gray-200 text-gray-700",
-  3: "bg-red-100 text-red-700",
-};
-
 const STATUS_LABELS = {
   0: "Запланована",
   1: "Активна",
   2: "Завершена",
   3: "Скасована",
+};
+
+const PARTICIPATION_STATUS_LABELS = {
+  0: "Очікує підтвердження",
+  1: "Прийнято",
+  2: "Відхилено",
 };
 
 function TripDetailsPage() {
@@ -52,11 +44,12 @@ function TripDetailsPage() {
       const participant = data.groupParticipationDtos?.find(
         (u) => u.userId === userId
       );
-      setIsParticipant(!!participant && participant.status === "Accepted");
-      setIsPending(!!participant && participant.status === "Pending");
+
+      setIsParticipant(!!participant && participant.status === 1); // Accepted
+      setIsPending(!!participant && participant.status === 0); // Pending
       setIsOwner(
         !!participant &&
-          participant.status === "Accepted" &&
+          participant.status === 1 &&
           participant.isAdmin === true
       );
     } catch (err) {
@@ -149,25 +142,27 @@ function TripDetailsPage() {
         status={trip.status}
         difficulty={trip.difficulty}
         maxParticipants={trip.maxParticipants}
-        startPoint={trip.startPoint} // або trip.startLocation
-        endPoint={trip.endPoint}
+        routePoints={trip.routePoints}
       />
 
       {/* Учасники */}
-      {trip.groupParticipationDtos?.length > 0 && (
+      {trip.groupParticipationDtos?.some((p) => p.status !== 2) && (
         <div className="participants-section">
           <h3 className="section-title">Учасники</h3>
           <ul className="participants-list">
-            {trip.groupParticipationDtos.map((p) => (
-              <ParticipantCard
-                key={p.id}
-                participant={p}
-                isOwner={isOwner}
-                onApprove={() => handleParticipantStatusChange(p.id, 1)}
-                onReject={() => handleParticipantStatusChange(p.id, 2)}
-                onRemove={() => handleRemoveParticipant(p.id)}
-              />
-            ))}
+            {trip.groupParticipationDtos
+              .filter((p) => p.status !== 2)
+              .map((p) => (
+                <ParticipantCard
+                  key={p.id}
+                  participant={p}
+                  statusLabel={PARTICIPATION_STATUS_LABELS[p.status]}
+                  isOwner={isOwner}
+                  onApprove={() => handleParticipantStatusChange(p.id, 1)}
+                  onReject={() => handleParticipantStatusChange(p.id, 2)}
+                  onRemove={() => handleRemoveParticipant(p.id)}
+                />
+              ))}
           </ul>
         </div>
       )}

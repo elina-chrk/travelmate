@@ -15,25 +15,37 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-function MapComponent({ start, end }) {
+function MapComponent({ routePoints = [], start, end }) {
+  if (!start || !end) return null;
+
   const center = [
-    (start.lat + end.lat) / 2,
-    (start.lng + end.lng) / 2,
+    (start.latitude + end.latitude) / 2,
+    (start.longitude + end.longitude) / 2,
   ];
 
   return (
-    <MapContainer center={center} zoom={7} scrollWheelZoom={false} className="map" >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={[start.lat, start.lng]}>
-        <Popup>Початок маршруту</Popup>
-      </Marker>
-      <Marker position={[end.lat, end.lng]}>
-        <Popup>Кінець маршруту</Popup>
-      </Marker>
-    </MapContainer>
+    <div className="map-container">
+      <MapContainer center={center} zoom={13} scrollWheelZoom={true} className="map">
+        <TileLayer
+          attribution='&copy; OpenStreetMap contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {routePoints.map((point, idx) => (
+          <Marker
+            key={idx}
+            position={[point.latitude, point.longitude]}
+          >
+            <Popup>
+              <strong>{point.name}</strong>
+              <br />
+              {point.description}
+              <br />
+              № {point.order}
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
   );
 }
 
