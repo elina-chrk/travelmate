@@ -97,8 +97,129 @@
   font-size: 14px;
   text-align: left;
   padding: 0;
+  background-color: none;
 }
 
 .toggle-password-text:hover {
   text-decoration: underline;
+  background-color: none;
+}
+.toggle-password-text:hover {
+    background-color: #f0f7ff;
+
+}
+
+.avatar-wrapper {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+.profile-label {
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: -0.5rem;
+  display: block;
+  font-size: 12px;
+  color: #00000099;
+}
+
+.delete-account-button {
+  margin-top: 1.5rem;
+  background-color: #ffdddd;
+  color: #a00;
+  border: 1px solid #a00;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+/* Modal styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.confirm-button {
+  background-color: #a00;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #eee;
+  border: 1px solid #aaa;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: rgb(0, 106, 2);
+}
+
+.cancel-button:hover {
+  background-color: #ede9fe;
+}
+
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.avatar-upload-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px dashed #ccc;
+  transition: border-color 0.3s;
+}
+
+.avatar-upload-label:hover {
+  border-color: #8b5cf6;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-placeholder {
+  font-size: 48px;
+  color: #8b5cf6;
 }

@@ -12,6 +12,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import EditTripPage from "./pages/EditTripPage.jsx";
 import TravelEmergencyPage from "./pages/TravelEmergencyPage.jsx";
 import AdminPage from "./components/admin/AdminPage.jsx";
+import TravelStatistics from "./components/TravelStatistics.jsx";
 
 function App() {
   return (
@@ -79,6 +80,12 @@ function App() {
                 <AdminPage />
               </PrivateRoute>
             }
+          />
+          <Route 
+          path="/travel-statistics/:participationId" 
+          element={
+          <TravelStatistics />
+          } 
           />
         </Routes>
       </div>

@@ -5,9 +5,13 @@ import { useNavigate } from "react-router-dom";
 import "./UserProfilePage.css";
 
 function UserProfilePage() {
-  const { userId } = useAuth();
+  const { userId, logout } = useAuth();
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [avatarFile, setAvatarFile] = useState(null);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,9 +19,10 @@ function UserProfilePage() {
     city: "",
     country: "",
     bio: "",
-    password: ""
+    password: "",
+    dateOfBirth: "",
+    avatarUrl: "",
   });
-  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     axiosInstance
@@ -31,26 +36,47 @@ function UserProfilePage() {
           city: res.data.city || "",
           country: res.data.country || "",
           bio: res.data.bio || "",
-          password: ""
+          password: "",
+          dateOfBirth: res.data.dateOfBirth?.slice(0, 10) || "",
+          avatarUrl: res.data.avatarUrl || "",
         });
       })
       .catch((err) => console.error("❌ Помилка завантаження профілю", err));
   }, []);
 
+  const getFileName = (url) => {
+    if (!url) return "";
+    return url.split("/").pop();
+  };
+  
+
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSave = async () => {
     try {
-      await axiosInstance.put(`/users/${userId}`, formData);
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phoneNumber: formData.phoneNumber,
+        city: formData.city,
+        country: formData.country,
+        bio: formData.bio,
+        password: formData.password || undefined,
+        dateOfBirth: formData.dateOfBirth
+          ? `${formData.dateOfBirth}T12:00:00Z`
+          : null,
+      };
+
+      await axiosInstance.put(`/users/${userId}`, payload);
       alert("✅ Профіль оновлено!");
       setFormData((prev) => ({
         ...prev,
-        password: ""
+        password: "",
       }));
     } catch (err) {
       console.error("❌ Помилка збереження", err);
@@ -76,6 +102,49 @@ function UserProfilePage() {
       <h1 className="profile-title">Мій профіль</h1>
 
       <div className="profile-form">
+        <div className="avatar-wrapper">
+          <label htmlFor="avatar-upload" className="avatar-upload-label">
+            {formData.avatarUrl ? (
+              <img
+                src={`http://localhost:8080/api/avatars/${getFileName(
+                  formData.avatarUrl
+                )}`}
+                alt="Avatar"
+                className="profile-avatar"
+              />
+            ) : (
+              <div className="avatar-placeholder">+</div>
+            )}
+          </label>
+          <input
+            type="file"
+            id="avatar-upload"
+            style={{ display: "none" }}
+            accept="image/*"
+            onChange={async (e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              try {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const res = await axiosInstance.post("/avatars", formData, {
+                  headers: { "Content-Type": "multipart/form-data" },
+                });
+
+                const newAvatarUrl = res.data; // або res.data.url — залежить від бека
+                setFormData((prev) => ({ ...prev, avatarUrl: newAvatarUrl }));
+                alert(
+                  "✅ Аватарка оновлена. Не забудьте натиснути 'Зберегти'."
+                );
+              } catch (err) {
+                console.error("❌ Помилка завантаження аватарки", err);
+                alert("Не вдалося завантажити аватарку.");
+              }
+            }}
+          />
+        </div>
+
         <input
           name="firstName"
           value={formData.firstName}
@@ -93,6 +162,16 @@ function UserProfilePage() {
           value={formData.phoneNumber}
           onChange={handleChange}
           placeholder="Номер телефону"
+        />
+        <label htmlFor="dateOfBirth" className="profile-label">
+          Дата народження
+        </label>
+        <input
+          type="date"
+          id="dateOfBirth"
+          name="dateOfBirth"
+          value={formData.dateOfBirth}
+          onChange={handleChange}
         />
         <input
           name="city"
@@ -133,7 +212,46 @@ function UserProfilePage() {
         <button onClick={handleSave} className="profile-save-button">
           Зберегти
         </button>
+
+        <button
+          className="delete-account-button"
+          onClick={() => setShowDeleteConfirm(true)}
+        >
+          🗑 Видалити акаунт
+        </button>
       </div>
+
+      {showDeleteConfirm && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <p>Ви впевнені, що хочете видалити свій акаунт?</p>
+            <div className="modal-buttons">
+              <button
+                className="confirm-button"
+                onClick={async () => {
+                  try {
+                    await axiosInstance.delete("/users/me");
+                    logout();
+                    alert("Акаунт видалено.");
+                    window.location.href = "/login";
+                  } catch (err) {
+                    console.error("❌ Помилка видалення акаунту", err);
+                    alert("Не вдалося видалити акаунт.");
+                  }
+                }}
+              >
+                Так, видалити
+              </button>
+              <button
+                className="cancel-button"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Повернутися назад
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

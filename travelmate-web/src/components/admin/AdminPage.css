@@ -85,3 +85,21 @@ button.unban:hover {
 button.unban:active {
   background-color: #3a6f18; 
 }
+
+.ban-btn, .unban-btn {
+  margin-left: 10px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ban-btn {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.unban-btn {
+  background-color: #2ecc71;
+  color: white;
+}

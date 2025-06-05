@@ -64,6 +64,9 @@ function MyParticipationsPage() {
                   ).toLocaleDateString()}`
                 : "Дата невідома";
 
+            const isTripFinished = group?.status === 2; // Завершена
+            const canViewStats = p.status === 1 && isTripFinished;
+
             return (
               <li key={p.id} className="participation-card">
                 <h2 className="card-title">{title}</h2>
@@ -71,12 +74,24 @@ function MyParticipationsPage() {
                 <p className="card-status">
                   Статус: <strong>{PARTICIPATION_STATUS_LABELS[p.status]}</strong>
                 </p>
-                <button
-                  className="card-button"
-                  onClick={() => navigate(`/trips/${p.travelGroupId}`)}
-                >
-                  Перейти до подорожі
-                </button>
+
+                <div className="card-buttons">
+                  <button
+                    className="card-button"
+                    onClick={() => navigate(`/trips/${p.travelGroupId}`)}
+                  >
+                    Перейти до подорожі
+                  </button>
+
+                  {canViewStats && (
+                    <button
+                      className="card-button secondary"
+                      onClick={() => navigate(`/travel-statistics/${p.id}`)}
+                    >
+                      Переглянути статистику
+                    </button>
+                  )}
+                </div>
               </li>
             );
           })}

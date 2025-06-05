@@ -37,7 +37,9 @@ function RegisterPage() {
           LastName: values.lastName,
         });
 
-        setSuccessMessage("Реєстрація успішна! Тепер увійдіть.");
+       // setSuccessMessage("Реєстрація успішна! Тепер увійдіть.");
+        setSuccessMessage("Чудово! Підтвердіть реєстрацію у листі на електронній пошті");
+
         setErrorMessage("");
         formik.resetForm();
       } catch (error) {

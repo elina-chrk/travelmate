@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Tooltip, Polyline } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./MapComponent.css";
@@ -23,6 +23,12 @@ function MapComponent({ routePoints = [], start, end }) {
     (start.longitude + end.longitude) / 2,
   ];
 
+  // відсортовані точки за порядком
+  const sortedPoints = [...routePoints].sort((a, b) => a.order - b.order);
+
+  // координати для Polyline
+  const routeLine = sortedPoints.map((point) => [point.latitude, point.longitude]);
+
   return (
     <div className="map-container">
       <MapContainer center={center} zoom={13} scrollWheelZoom={true} className="map">
@@ -30,18 +36,22 @@ function MapComponent({ routePoints = [], start, end }) {
           attribution='&copy; OpenStreetMap contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {routePoints.map((point, idx) => (
-          <Marker
-            key={idx}
-            position={[point.latitude, point.longitude]}
-          >
-            <Popup>
-              <strong>{point.name}</strong>
-              <br />
-              {point.description}
-              <br />
-              № {point.order}
-            </Popup>
+
+        {/* Лінія маршруту */}
+        {routeLine.length > 1 && (
+          <Polyline positions={routeLine} color="blue" weight={4} />
+        )}
+
+        {/* Точки маршруту */}
+        {sortedPoints.map((point, idx) => (
+          <Marker key={idx} position={[point.latitude, point.longitude]}>
+            <Tooltip direction="top" offset={[0, -10]} opacity={1}>
+              <div>
+                <strong>№{point.order} – {point.name}</strong>
+                <br />
+                {point.description}
+              </div>
+            </Tooltip>
           </Marker>
         ))}
       </MapContainer>

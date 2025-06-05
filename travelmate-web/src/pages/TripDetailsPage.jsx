@@ -68,15 +68,26 @@ function TripDetailsPage() {
   };
 
   const handleLeave = async () => {
-    if (!window.confirm("Ви точно хочете вийти з подорожі?")) return;
-    try {
-      await axiosInstance.delete(`/participation/leave/${id}`);
-      alert("Ви вийшли з подорожі.");
-      navigate("/trips");
-    } catch {
-      alert("Не вдалося вийти з подорожі.");
+  if (!window.confirm("Ви точно хочете вийти з подорожі?")) return;
+
+  try {
+    const myParticipation = trip.groupParticipationDtos.find(
+      (p) => p.userId === userId && p.status === 1
+    );
+
+    if (!myParticipation) {
+      alert("Ваша участь не знайдена або не активна.");
+      return;
     }
-  };
+
+    await axiosInstance.post(`/participation/${myParticipation.id}/leave`);
+    alert("Ви вийшли з подорожі.");
+    navigate("/trips");
+  } catch (err) {
+    console.error("❌ Помилка при виході з подорожі:", err);
+    alert("Не вдалося вийти з подорожі.");
+  }
+};
 
   const handleDeleteTrip = async () => {
     if (!window.confirm("Підтвердити видалення подорожі?")) return;
@@ -174,19 +185,16 @@ function TripDetailsPage() {
             Приєднатися
           </PurpleButton>
         )}
-
         {isPending && (
           <p className="pending-text">
             Очікується підтвердження організатором...
           </p>
         )}
-
         {isParticipant && !isOwner && (
           <PurpleButton onClick={handleLeave} className="btn-leave">
             Вийти з подорожі
           </PurpleButton>
         )}
-
         {isOwner && (
           <div className="owner-actions">
             <PurpleButton onClick={() => navigate(`/trips/${trip.id}/edit`)}>
@@ -197,8 +205,9 @@ function TripDetailsPage() {
             </PurpleButton>
           </div>
         )}
-
-        <ChatBox tripId={trip.id} userId={userId} />
+        {(isParticipant || isOwner) && (
+          <ChatBox tripId={trip.id} userId={userId} />
+        )}{" "}
       </div>
     </div>
   );

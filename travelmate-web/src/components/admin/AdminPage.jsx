@@ -15,8 +15,8 @@ const AdminPage = () => {
   const [banGroupReason, setBanGroupReason] = useState("");
 
   const [unbanRecordId, setUnbanRecordId] = useState("");
+  const [unbanType, setUnbanType] = useState(""); 
 
-  // Функція для завантаження даних
   const fetchData = async () => {
     try {
       const [bannedUsersRes, activeUsersRes, bannedGroupsRes, activeGroupsRes] =
@@ -36,21 +36,10 @@ const AdminPage = () => {
     }
   };
 
-  const fetchWithAuth = async (url, options = {}) => {
-    const token = localStorage.getItem("token");
-    const headers = {
-      ...options.headers,
-      Authorization: `Bearer ${token}`,
-    };
-    const res = await fetch(url, { ...options, headers });
-    return res;
-  };
-
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Бан користувача
   const banUser = async (e) => {
     e.preventDefault();
     try {
@@ -85,14 +74,57 @@ const AdminPage = () => {
 
   const unban = async (e) => {
     e.preventDefault();
-    if (!unbanRecordId) return alert("Please enter banRecordId");
+    if (!unbanRecordId || !unbanType) {
+      return alert("Please enter banRecordId and select type");
+    }
     try {
-      await axiosInstance.post(`/admin/unban/${unbanRecordId}`);
+      await axiosInstance.post(`/admin/unban/${unbanType}/${unbanRecordId}`);
       alert("Unbanned successfully");
       setUnbanRecordId("");
+      setUnbanType("");
       fetchData();
     } catch (error) {
       alert("Error unbanning");
+    }
+  };
+
+  const handleBanUser = async (userId) => {
+    const reason = prompt("Вкажіть причину блокування:");
+    if (!reason) return;
+    try {
+      await axiosInstance.post("/admin/ban/user", { userId, reason });
+      fetchData();
+    } catch (err) {
+      alert("Не вдалося заблокувати користувача");
+    }
+  };
+
+  const handleUnbanUser = async (userId) => {
+    try {
+      await axiosInstance.post(`/admin/unban/user/${userId}`);
+      fetchData();
+    } catch (err) {
+      alert("Не вдалося розблокувати користувача");
+    }
+  };
+
+  const handleBanGroup = async (groupId) => {
+    const reason = prompt("Вкажіть причину блокування групи:");
+    if (!reason) return;
+    try {
+      await axiosInstance.post("/admin/ban/group", { groupId, reason });
+      fetchData();
+    } catch (err) {
+      alert("Не вдалося заблокувати групу");
+    }
+  };
+
+  const handleUnbanGroup = async (groupId) => {
+    try {
+      await axiosInstance.post(`/admin/unban/group/${groupId}`);
+      fetchData();
+    } catch (err) {
+      alert("Не вдалося розблокувати групу");
     }
   };
 
@@ -105,7 +137,13 @@ const AdminPage = () => {
         <ul>
           {bannedUsers.map((u) => (
             <li key={u.id}>
-              {u.username} ({u.email}) - Banned: {u.isBanned ? "Yes" : "No"}
+              {u.username} ({u.email}) – Заблоковано
+              <button
+                onClick={() => handleUnbanUser(u.id)}
+                className="unban-btn"
+              >
+                Розблокувати
+              </button>
             </li>
           ))}
         </ul>
@@ -116,7 +154,10 @@ const AdminPage = () => {
         <ul>
           {activeUsers.map((u) => (
             <li key={u.id}>
-              {u.username} ({u.email}) - Active: {u.isActive ? "Yes" : "No"}
+              {u.username} ({u.email}) – Активний
+              <button onClick={() => handleBanUser(u.id)} className="ban-btn">
+                Заблокувати
+              </button>
             </li>
           ))}
         </ul>
@@ -127,7 +168,13 @@ const AdminPage = () => {
         <ul>
           {bannedGroups.map((g) => (
             <li key={g.id}>
-              {g.title} - Banned: {g.isBanned ? "Yes" : "No"}
+              {g.title} – Заблоковано
+              <button
+                onClick={() => handleUnbanGroup(g.id)}
+                className="unban-btn"
+              >
+                Розблокувати
+              </button>
             </li>
           ))}
         </ul>
@@ -137,68 +184,19 @@ const AdminPage = () => {
         <h2>Active Groups</h2>
         <ul>
           {activeGroups.map((g) => (
-            <li key={g.id}>{g.title} - Active</li>
+            <li key={g.id}>
+              {g.title} – Активна
+              <button onClick={() => handleBanGroup(g.id)} className="ban-btn">
+                Заблокувати
+              </button>
+            </li>
           ))}
         </ul>
       </section>
 
       <hr />
 
-      <form onSubmit={banUser} style={{ marginBottom: "20px" }}>
-        <h3>Ban User</h3>
-        <input
-          type="text"
-          placeholder="User ID"
-          value={banUserId}
-          onChange={(e) => setBanUserId(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Reason"
-          value={banUserReason}
-          onChange={(e) => setBanUserReason(e.target.value)}
-          required
-        />
-        <button type="submit" className="ban">
-          Ban User
-        </button>
-      </form>
-
-      <form onSubmit={banGroup} style={{ marginBottom: "20px" }}>
-        <h3>Ban Group</h3>
-        <input
-          type="text"
-          placeholder="Group ID"
-          value={banGroupId}
-          onChange={(e) => setBanGroupId(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Reason"
-          value={banGroupReason}
-          onChange={(e) => setBanGroupReason(e.target.value)}
-          required
-        />
-        <button type="submit" className="ban">
-          Ban Group
-        </button>
-      </form>
-
-      <form onSubmit={unban}>
-        <h3>Unban by Ban Record ID</h3>
-        <input
-          type="text"
-          placeholder="Ban Record ID"
-          value={unbanRecordId}
-          onChange={(e) => setUnbanRecordId(e.target.value)}
-          required
-        />
-        <button type="submit" className="unban">
-          Unban
-        </button>
-      </form>
+      
     </div>
   );
 };
