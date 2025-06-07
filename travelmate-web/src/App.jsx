@@ -10,7 +10,6 @@ import TripDetailsPage from "./pages/TripDetailsPage";
 import MyParticipationsPage from "./pages/MyParticipationsPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import EditTripPage from "./pages/EditTripPage.jsx";
-import TravelEmergencyPage from "./pages/TravelEmergencyPage.jsx";
 import AdminPage from "./components/admin/AdminPage.jsx";
 import TravelStatistics from "./components/TravelStatistics.jsx";
 
@@ -69,10 +68,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/travel/:id/emergency"
-            element={<TravelEmergencyPage />}
-          />
+          
           <Route
             path="/admin"
             element={

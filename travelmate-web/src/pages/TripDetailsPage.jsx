@@ -141,9 +141,6 @@ function TripDetailsPage() {
       >
         ← Назад
       </button>
-      <Link to={`/travel/${trip.id}/emergency`} className="emergency-button">
-        🚨 Тривога
-      </Link>
 
       <TripInfoCard
         title={trip.title}

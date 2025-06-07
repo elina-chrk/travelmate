@@ -3,64 +3,81 @@ import axiosInstance from '../api/axiosInstance';
 import { useParams } from 'react-router-dom';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import './TravelStatistics.css';
 
 const TravelStatistics = () => {
   const { participationId } = useParams();
   const [stats, setStats] = useState(null);
-  const [route, setRoute] = useState([]);
+  const [routepoints, setRoute] = useState([]);
 
   useEffect(() => {
-  axiosInstance.get(`/statistics/participation/${participationId}`)
-    .then(res => {
-      setStats(res.data);
-    })
-    .catch(err => {
-      if (err.response?.status === 400) {
-        setStats(null);
-        console.warn("❌ Статистика не знайдена для participationId:", participationId);
-      } else {
-        console.error(err);
-      }
-    });
+    axiosInstance.get(`/statistics/participation/${participationId}`)
+      .then(res => {
+        const data = res.data;
+        setStats(data);
 
-  // Завантаження треків — необов'язково, якщо нема статистики
-  axiosInstance.get(`/participation/by-user/${participationId}/tracking`)
-    .then(res => {
-      const points = res.data.map(p => [p.latitude, p.longitude]);
-      setRoute(points);
-    })
-    .catch(console.error);
-}, [participationId]);
+        // Отримуємо точки маршруту прямо з routePoints
+        const points = data.routePoints?.map(p => [p.latitude, p.longitude]) || [];
+        setRoute(points);
+      })
+      .catch(err => {
+        if (err.response?.status === 400) {
+          setStats(null);
+          console.warn("❌ Статистика не знайдена для participationId:", participationId);
+        } else {
+          console.error(err);
+        }
+      });
+  }, [participationId]);
 
-
-if (stats === null) {
-  return <p>Статистика наразі недоступна або поїздка ще не завершена.</p>;
-}
+  if (stats === null) {
+    return (
+      <div className="stats-wrapper">
+        <h2 className="stats-title">📊 Статистика подорожі</h2>
+        <p className="map-unavailable">Статистика наразі недоступна або поїздка ще не завершена.</p>
+      </div>
+    );
+  }
 
   const duration = formatDuration(stats.travelDuration);
-  const avgSpeed = stats.distanceKm / (parseDurationToHours(stats.travelDuration));
+  const avgSpeed = parseDurationToHours(stats.travelDuration) > 0
+    ? stats.distanceKm / parseDurationToHours(stats.travelDuration)
+    : 0;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Статистика подорожі</h2>
-      <ul className="mb-6 space-y-2">
-        <li><strong>Тривалість:</strong> {duration}</li>
-        <li><strong>Відстань:</strong> {stats.distanceKm.toFixed(2)} км</li>
-        <li><strong>Середній пульс:</strong> {stats.averageHeartRate.toFixed(0)} уд/хв</li>
-        <li><strong>Середня швидкість:</strong> {avgSpeed.toFixed(2)} км/год</li>
-      </ul>
+    <div className="stats-wrapper">
+      <h2 className="stats-title">📊 Статистика подорожі</h2>
 
-      {route.length > 0 ? (
-        <MapContainer center={route[0]} zoom={13} style={{ height: '400px', width: '100%' }}>
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <Polyline positions={route} color="blue" />
-        </MapContainer>
-      ) : (
-        <p className="text-gray-600">Маршрут недоступний.</p>
-      )}
+      <div className="stats-card">
+        <Stat label="Тривалість" value={duration} />
+        <Stat label="Відстань" value={`${stats.distanceKm.toFixed(2)} км`} />
+        <Stat label="Середній пульс" value={`${stats.averageHeartRate.toFixed(0)} уд/хв`} />
+        <Stat label="Середня швидкість" value={`${avgSpeed.toFixed(2)} км/год`} />
+      </div>
+
+      <div>
+        <h3 className="stats-map-title">🗺️ Пройдений маршрут</h3>
+        {routepoints.length > 0 ? (
+          <div className="map-container">
+            <MapContainer center={routepoints[0]} zoom={14} style={{ height: '400px', width: '100%' }}>
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Polyline positions={routepoints} color="#3b82f6" />
+            </MapContainer>
+          </div>
+        ) : (
+          <p className="map-unavailable">Маршрут недоступний.</p>
+        )}
+      </div>
     </div>
   );
 };
+
+const Stat = ({ label, value }) => (
+  <div className="stat-item">
+    <span className="stat-label">{label}</span>
+    <span className="stat-value">{value}</span>
+  </div>
+);
 
 export default TravelStatistics;
 
@@ -74,6 +91,7 @@ function parseDurationToHours(durationString) {
   const [h, m, s] = durationString.split(':').map(Number);
   return h + m / 60 + s / 3600;
 }
+
 
 /*
 import React from 'react';

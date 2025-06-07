@@ -10,7 +10,6 @@ function UserProfilePage() {
   const navigate = useNavigate();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [avatarFile, setAvatarFile] = useState(null);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -45,11 +44,9 @@ function UserProfilePage() {
   }, []);
 
   const getFileName = (url) => {
-    if (!url) return "";
+    if (typeof url !== "string") return "";
     return url.split("/").pop();
   };
-
-  
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -58,19 +55,21 @@ function UserProfilePage() {
     }));
   };
 
-  const handleSave = async () => {
+  const handleSave = async (overrideData = null) => {
     try {
+      const dataToSave = overrideData || formData;
       const payload = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phoneNumber: formData.phoneNumber,
-        city: formData.city,
-        country: formData.country,
-        bio: formData.bio,
-        password: formData.password || undefined,
-        dateOfBirth: formData.dateOfBirth
-          ? `${formData.dateOfBirth}T12:00:00Z`
+        firstName: dataToSave.firstName,
+        lastName: dataToSave.lastName,
+        phoneNumber: dataToSave.phoneNumber,
+        city: dataToSave.city,
+        country: dataToSave.country,
+        bio: dataToSave.bio,
+        password: dataToSave.password || undefined,
+        dateOfBirth: dataToSave.dateOfBirth
+          ? `${dataToSave.dateOfBirth}T12:00:00Z`
           : null,
+        avatarUrl: dataToSave.avatarUrl,
       };
 
       await axiosInstance.put(`/users/${userId}`, payload);
@@ -126,19 +125,26 @@ function UserProfilePage() {
               const file = e.target.files[0];
               if (!file) return;
               try {
-                const formData = new FormData();
-                formData.append("file", file);
+                const uploadForm = new FormData();
+                uploadForm.append("file", file);
 
-                const res = await axiosInstance.post("/avatars", formData, {
+                const res = await axiosInstance.post("/avatars", uploadForm, {
                   headers: { "Content-Type": "multipart/form-data" },
                 });
 
-                const newAvatarUrl = res.data.avatarUrl; // або res.data.url — залежить від бека
-                setFormData((prev) => ({ ...prev, avatarUrl: newAvatarUrl }));
-                console.log(res.data);
-                alert(
-                  "✅ Аватарка оновлена. Не забудьте натиснути 'Зберегти'."
-                );
+                const newAvatarUrl = res.data.avatarUrl;
+
+                const updatedForm = {
+                  ...formData,
+                  avatarUrl: newAvatarUrl,
+                };
+
+                setFormData(updatedForm);
+
+                await handleSave(updatedForm);
+
+                alert("✅ Аватарка оновлена та профіль збережено.");
+                window.location.reload();
               } catch (err) {
                 console.error("❌ Помилка завантаження аватарки", err);
                 alert("Не вдалося завантажити аватарку.");
@@ -211,7 +217,7 @@ function UserProfilePage() {
           </button>
         </div>
 
-        <button onClick={handleSave} className="profile-save-button">
+        <button onClick={() => handleSave()} className="profile-save-button">
           Зберегти
         </button>
 
