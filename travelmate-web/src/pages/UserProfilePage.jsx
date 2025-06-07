@@ -48,6 +48,7 @@ function UserProfilePage() {
     if (!url) return "";
     return url.split("/").pop();
   };
+
   
 
   const handleChange = (e) => {
@@ -132,8 +133,9 @@ function UserProfilePage() {
                   headers: { "Content-Type": "multipart/form-data" },
                 });
 
-                const newAvatarUrl = res.data; // або res.data.url — залежить від бека
+                const newAvatarUrl = res.data.avatarUrl; // або res.data.url — залежить від бека
                 setFormData((prev) => ({ ...prev, avatarUrl: newAvatarUrl }));
+                console.log(res.data);
                 alert(
                   "✅ Аватарка оновлена. Не забудьте натиснути 'Зберегти'."
                 );
