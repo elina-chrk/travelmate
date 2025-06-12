@@ -1,0 +1,58 @@
+.activate-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f9f4ff;
+  padding: 20px;
+}
+
+.activate-box {
+  background: white;
+  border: 1px solid #cbbdfc;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(80, 0, 150, 0.1);
+}
+
+.activate-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #5b21b6;
+  margin-bottom: 15px;
+}
+
+.activate-message {
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.activate-message.success {
+  color: #15803d;
+}
+
+.activate-message.error {
+  color: #dc2626;
+}
+
+.redirect-text {
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.activate-button {
+  background-color: #7c3aed;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.activate-button:hover {
+  background-color: #6d28d9;
+}

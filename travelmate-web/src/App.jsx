@@ -12,6 +12,7 @@ import UserProfilePage from "./pages/UserProfilePage";
 import EditTripPage from "./pages/EditTripPage.jsx";
 import AdminPage from "./components/admin/AdminPage.jsx";
 import TravelStatistics from "./components/TravelStatistics.jsx";
+import ActivateAccountPage from "./pages/ActivateAccountPage";
 
 function App() {
   return (
@@ -68,7 +69,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          
+          <Route path="/activate" element={<ActivateAccountPage />} />
           <Route
             path="/admin"
             element={
