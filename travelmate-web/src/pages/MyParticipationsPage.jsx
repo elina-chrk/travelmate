@@ -22,18 +22,21 @@ function MyParticipationsPage() {
         const enhanced = await Promise.all(
           participationsRaw.map(async (p) => {
             try {
-              const groupRes = await axiosInstance.get(
-                `/travel-groups/${p.travelGroupId}`
-              );
-              return { ...p, travelGroup: groupRes.data };
+              const groupRes = await axiosInstance.get(`/travel-groups/${p.travelGroupId}`);
+              const group = groupRes.data;
+
+              // ❌ Якщо подорож заблокована — не додаємо в список
+              if (group.isBanned) return null;
+
+              return { ...p, travelGroup: group };
             } catch (err) {
               console.error("❌ Не вдалося завантажити подорож:", p.travelGroupId);
-              return { ...p, travelGroup: null };
+              return null;
             }
           })
         );
 
-        setParticipations(enhanced);
+        setParticipations(enhanced.filter(Boolean)); // фільтруємо null
       })
       .catch((err) => console.error("❌ Не вдалося завантажити участі", err));
   }, []);
@@ -59,12 +62,10 @@ function MyParticipationsPage() {
             const title = group?.title || "Подорож";
             const date =
               group?.startTime && group?.endTime
-                ? `${new Date(group.startTime).toLocaleDateString()} — ${new Date(
-                    group.endTime
-                  ).toLocaleDateString()}`
+                ? `${new Date(group.startTime).toLocaleDateString()} — ${new Date(group.endTime).toLocaleDateString()}`
                 : "Дата невідома";
 
-            const isTripFinished = group?.status === 2; // Завершена
+            const isTripFinished = group?.status === 2; // статус 2 = завершена
             const canViewStats = p.status === 1 && isTripFinished;
 
             return (
