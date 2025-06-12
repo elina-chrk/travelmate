@@ -70,6 +70,7 @@ function App() {
             }
           />
           <Route path="/activate" element={<ActivateAccountPage />} />
+          
           <Route
             path="/admin"
             element={

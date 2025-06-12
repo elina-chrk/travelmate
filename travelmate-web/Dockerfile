@@ -1,28 +1,16 @@
-# 1. Используем официальный образ Node.js
-FROM node:20-alpine
+# Stage 1 — build
+FROM node:20-alpine AS builder
 
-# 2. Устанавливаем рабочую директорию
 WORKDIR /app
-
-# 3. Копируем package.json и lock-файл
 COPY package*.json ./
-
-# 4. Устанавливаем зависимости
 RUN npm install
-
-# 5. Копируем весь проект
 COPY . .
-
-# 6. Собираем production-версию
 RUN npm run build
 
-# 7. Устанавливаем nginx и копируем билд
+# Stage 2 — serve
 FROM nginx:alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
-
-# 8. Копируем конфиг nginx (если есть) или используем дефолтный
-# COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 80
-
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 CMD ["nginx", "-g", "daemon off;"]
