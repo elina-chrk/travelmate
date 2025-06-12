@@ -2,11 +2,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../api/axiosInstance";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // імпортуємо useNavigate
 import './RegisterPage.css';
 
 function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate(); // ініціалізуємо навігацію
 
   const formik = useFormik({
     initialValues: {
@@ -37,9 +39,7 @@ function RegisterPage() {
           LastName: values.lastName,
         });
 
-       // setSuccessMessage("Реєстрація успішна! Тепер увійдіть.");
         setSuccessMessage("Чудово! Підтвердіть реєстрацію у листі на електронній пошті");
-
         setErrorMessage("");
         formik.resetForm();
       } catch (error) {
@@ -107,6 +107,14 @@ function RegisterPage() {
 
         <button type="submit" className="register-button">
           Зареєструватись
+        </button>
+
+        <button
+          type="button"
+          className="login-button"
+          onClick={() => navigate("/login")} 
+        >
+          Увійти в акаунт
         </button>
       </form>
     </div>

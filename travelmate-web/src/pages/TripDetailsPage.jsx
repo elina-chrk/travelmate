@@ -80,7 +80,7 @@ function TripDetailsPage() {
       return;
     }
 
-    await axiosInstance.post(`/participation/${myParticipation.id}/leave`);
+    await axiosInstance.delete(`/participation/${myParticipation.id}`);
     alert("Ви вийшли з подорожі.");
     navigate("/trips");
   } catch (err) {

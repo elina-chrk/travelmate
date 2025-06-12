@@ -3,8 +3,8 @@ import { useAuth } from "../context/AuthContext.jsx";
 import "./Layout.css";
 
 const Layout = ({ children }) => {
-  const { logout } = useAuth();
   const navigate = useNavigate();
+   const { logout, isAdmin } = useAuth(); 
 
   return (
     <div className="layout">
@@ -31,7 +31,15 @@ const Layout = ({ children }) => {
             >
               🧍‍♂️ Мої участі
             </button>
-            
+             {/* Кнопка для адміністратора */}
+            {isAdmin && (
+              <button
+                onClick={() => navigate("/admin")}
+                className="sidebar-button admin-button"
+              >
+                Панель адміністратора
+              </button>
+            )}
           </nav>
         </div>
       </aside>

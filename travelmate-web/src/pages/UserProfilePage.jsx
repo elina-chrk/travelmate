@@ -106,12 +106,11 @@ function UserProfilePage() {
           <label htmlFor="avatar-upload" className="avatar-upload-label">
             {formData.avatarUrl ? (
               <img
-                src={`http://localhost:8080/api/avatars/${getFileName(
-                  formData.avatarUrl
-                )}`}
-                alt="Avatar"
-                className="profile-avatar"
-              />
+  src={`http://localhost:8080/api/avatars/${getFileName(formData.avatarUrl)}?v=${crypto.randomUUID()}`}
+  alt="Avatar"
+  className="profile-avatar"
+/>
+
             ) : (
               <div className="avatar-placeholder">+</div>
             )}
@@ -132,6 +131,8 @@ function UserProfilePage() {
                   headers: { "Content-Type": "multipart/form-data" },
                 });
 
+                console.log("Нова аватарка:", res.data);
+
                 const newAvatarUrl = res.data.avatarUrl;
 
                 const updatedForm = {
@@ -143,8 +144,8 @@ function UserProfilePage() {
 
                 await handleSave(updatedForm);
 
-                alert("✅ Аватарка оновлена та профіль збережено.");
-                window.location.reload();
+             //   alert("✅ Аватарка оновлена та профіль збережено.");
+               // window.location.reload();
               } catch (err) {
                 console.error("❌ Помилка завантаження аватарки", err);
                 alert("Не вдалося завантажити аватарку.");

@@ -88,6 +88,15 @@ function LoginPage() {
         <button type="submit" className="login-button">
           Увійти
         </button>
+
+        <button
+          type="button"
+          className="register-button"
+          onClick={() => navigate('/register')} 
+          style={{ marginTop: '10px' }} 
+        >
+          Реєстрація
+        </button>
       </form>
     </div>
   );
